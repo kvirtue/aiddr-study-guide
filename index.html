@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AIDDR midterm study guide</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f6f6f7;
+    --fill: #ececee;
+    --stroke: #e2e2e6;
+    --stroke-strong: #cfcfd6;
+    --text: #141414;
+    --text-2: #4a4a50;
+    --text-3: #75757c;
+    --accent: #2e79b5;
+    --info: #2e79b5;
+    --warning: #d98a2b;
+    --danger: #c04848;
+    --success: #1f8a65;
+    --neutral: #8888a8;
+    --heat: 192, 72, 72;
+    --warn-bg: #fdf3e6;
+    --info-bg: #eaf2f9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #181818;
+      --surface: #202022;
+      --fill: #2a2a2d;
+      --stroke: #313135;
+      --stroke-strong: #45454b;
+      --text: #f0f0f0;
+      --text-2: #bdbdc2;
+      --text-3: #92929a;
+      --accent: #5a9fd6;
+      --info: #5a9fd6;
+      --warning: #f0a040;
+      --danger: #d86060;
+      --neutral: #9a9ab8;
+      --warn-bg: #2d2418;
+      --info-bg: #182430;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-size: 24px; margin: 0 0 8px; }
+  h2 { font-size: 19px; margin: 8px 0 0; }
+  h3 { font-size: 16px; margin: 8px 0 0; }
+  p { margin: 0; }
+  .stack > * + * { margin-top: 14px; }
+  .secondary { color: var(--text-2); }
+  .small { font-size: 12.5px; color: var(--text-3); }
+  .semibold { font-weight: 600; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+  .grid2 > .stack > * + *, .stat-grid { margin-top: 0; }
+  .callout { border-radius: 8px; padding: 14px 16px; }
+  .callout.warning { background: var(--warn-bg); }
+  .callout.info { background: var(--info-bg); }
+  .callout.neutral { background: var(--surface); }
+  .callout .title { font-weight: 600; margin-bottom: 6px; }
+  .callout p + p { margin-top: 8px; }
+  .stat { background: var(--surface); border-radius: 8px; padding: 14px 16px; }
+  .stat .v { font-size: 22px; font-weight: 600; }
+  .stat .l { color: var(--text-2); font-size: 13px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    border: 1px solid var(--stroke-strong); background: transparent; color: var(--text-2);
+    border-radius: 999px; padding: 5px 14px; font: inherit; font-size: 13.5px; cursor: pointer;
+  }
+  .pill.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .tag { display: inline-block; font-size: 11.5px; border: 1px solid var(--stroke-strong); color: var(--text-2); border-radius: 999px; padding: 1px 9px; white-space: nowrap; }
+  .card { border: 1px solid var(--stroke); border-radius: 8px; overflow: hidden; }
+  .card .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--stroke); font-weight: 600; }
+  .card .body { padding: 12px 14px; }
+  .card .body p + p { margin-top: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--stroke); }
+  th { color: var(--text-3); font-weight: 600; font-size: 12.5px; }
+  tbody tr:nth-child(even) { background: var(--surface); }
+  tr.danger td:first-child { box-shadow: inset 3px 0 0 var(--danger); }
+  tr.warning td:first-child { box-shadow: inset 3px 0 0 var(--warning); }
+  .table-wrap { overflow-x: auto; }
+  details { border-top: 1px solid var(--stroke); padding-top: 10px; }
+  details summary { cursor: pointer; font-weight: 600; }
+  details > div { margin-top: 10px; }
+  details > div > p + p { margin-top: 10px; }
+  hr { border: 0; border-top: 1px solid var(--stroke); margin: 8px 0; }
+  .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart svg text { font-family: inherit; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--text-2); margin-top: 4px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--c); margin-right: 6px; vertical-align: -1px; }
+  .heatmap { display: grid; grid-template-columns: 120px repeat(5, 1fr); gap: 3px; font-size: 12px; }
+  .heatmap div { padding: 8px 6px; border-radius: 4px; text-align: center; }
+  .heatmap .lab { text-align: left; color: var(--text-2); }
+  .heatmap .cell b { display: block; }
+  .heatmap .cell span { font-size: 11px; color: var(--text-2); }
+  .donut-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .tab { display: none; }
+  .tab.active { display: block; }
+  ol.prompts { padding-left: 20px; margin: 0; }
+  ol.prompts li + li { margin-top: 6px; }
+</style>
+</head>
+<body>
+<main class="stack">
+  <div>
+    <h1>AIDDR midterm study guide</h1>
+    <p class="secondary">Lectures on risk definitions and tabular data, from the PDFs. The exam is about interpreting a result in light of possible AI risk. You are expected to work the in-class exercises, not to recite the slides.</p>
+  </div>
+
+  <div class="callout warning">
+    <div class="title">The only formula to memorize</div>
+    <p>Risk = likelihood of harm × consequence (impact / severity).</p>
+    <p>Everything else is a tool you use while looking at a chart. Bayes’ rule, F1, and the names of hypothesis tests can stay on a scratch sheet. A number with no exposure, no severity, and no statement of what it fails to prove is not an answer.</p>
+  </div>
+
+  <div class="grid3">
+    <div class="stat"><div class="v">1</div><div class="l">Name the hazard</div></div>
+    <div class="stat"><div class="v">2</div><div class="l">Judge the consequence</div></div>
+    <div class="stat"><div class="v">3</div><div class="l">Estimate likelihood, with its basis</div></div>
+  </div>
+
+  <div class="pills" id="pills">
+    <button class="pill active" data-tab="answer">How to answer</button>
+    <button class="pill" data-tab="pudo">PUDO and statistics</button>
+    <button class="pill" data-tab="bricking">Bricking and models</button>
+    <button class="pill" data-tab="bias">Bias, missing data, metrics</button>
+  </div>
+
+  <!-- ================= HOW TO ANSWER ================= -->
+  <section class="tab active stack" id="tab-answer">
+    <h2>What a full answer does</h2>
+    <p>You will be handed a table, a p-value, a model printout, or a short scenario. Walk it in this order. Skip a step and the risk claim is unfinished.</p>
+
+    <h3>1. Hazard</h3>
+    <p>A hazard is a state or event that can lead to harm: injury, death, or loss. “The model is an LLM” is not a hazard. “The vehicle stops in a travel lane during pickup” is. “The classifier misses a fatal crash” is. Connectionist systems add hazards that a pump-failure checklist will miss: bad or incomplete labels, training data that was itself generated by a model, environments the data never saw, a world model that is missing a sensor or a feature, too little testing, and a person who trusts the output. After a failure, the list shifts: lack of self-assessment, and human overconfidence.</p>
+    <p>The empty-room exercise is the pattern. Asked for a room with no elephant, the model draws an elephant and reports success. The hazard is an inadequate world model plus no check that the constraint was met. If a person still acts on that output, the hazard is overconfidence, not only the picture.</p>
+
+    <h3>2. Consequence</h3>
+    <p>Consequence is often a judgment. Say whose harm you are scoring and why you did not pick the cell next to it. The same event can be a delay for traffic and a severe outcome for a blocked ambulance. Score those as separate hazards. Do not average them into one cell.</p>
+
+    <h3>3. Likelihood, and the basis</h3>
+    <p>Record how you got the probability, not only the probability. Raw counts are not a rate. Waymo’s 53 crashes are not a worse record than Cruise’s 27, because Waymo drove about 5.5 million miles and Cruise about 1.5 million. The odds ratios on that slide are 4:1 (interval 3–5) and 8:1 (interval 5–11). NVIDIA’s 59:1 comes from one crash in 7,169 miles, and the interval runs from 8 to 421. The point estimate is not the risk. A one-event testing permit is not comparable to a commercial fleet.</p>
+    <div class="grid2">
+      <div class="stack">
+        <p class="semibold">Raw crash count</p>
+        <div class="chart" id="c-raw"></div>
+        <p class="small">Y axis: number of crashes. Waymo looks worst.</p>
+      </div>
+      <div class="stack">
+        <p class="semibold">Crashes per million miles</p>
+        <div class="chart" id="c-rate"></div>
+        <p class="small">Y axis: crashes ÷ millions of miles (53 / 5.5, 27 / 1.5, 1 / 0.0072). Same data, opposite ranking.</p>
+      </div>
+    </div>
+    <div class="stack">
+      <p class="semibold">Odds ratio with its interval</p>
+      <div class="chart" id="c-odds"></div>
+      <p class="small">Dot is the point estimate, bar is the interval. NVIDIA’s bar spans almost two orders of magnitude, so its 59 cannot rank it against the others. Source: lecture slide on AV crash comparisons.</p>
+    </div>
+    <p>The flight example is the same move. 0.07 fatalities per billion passenger-miles, times the miles one person actually flies, is a personal risk. The slide treats a daily 500-mile flyer as about 1 in 85,000 over a year. Multiply rate by exposure, and write down the exposure you used.</p>
+
+    <h3>4. Place it on the chart</h3>
+    <p>On the class matrix, multiply the probability row (1 rare through 5 almost certain) by the impact column (1 insignificant through 5 severe). The product is the cell score. You do not need the color words memorized if you can multiply and then read the cell.</p>
+    <div class="table-wrap"><div class="heatmap" id="heatmap"></div></div>
+    <p class="small">Class risk matrix. Score = probability level × impact level. Darker cells are higher scores. Source: lecture slides on qualitative risk.</p>
+    <p>The DoD chart is a different numbering. Rank 1 is the worst cell (almost certain × disastrous), and “incredible” is left blank. Do not mix the two grids. The DoD question on the slide is the one that matters for new AI: a system with no track record has no honest frequency, so a precise rank is a costume on a guess.</p>
+
+    <h3>5. Say what the result does not prove</h3>
+    <p>This is the part the exam is built around. Match the limit to the result you were given.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>If you are looking at</th><th>You may say</th><th>You may not say</th></tr></thead>
+      <tbody>
+        <tr><td>A p-value of 0.054</td><td>The data do not clear a 0.05 bar. With a handful of points the test has little power.</td><td>There is no difference, or the risk went away.</td></tr>
+        <tr><td>A huge confidence interval</td><td>The rate is poorly known. One crash on a few thousand miles cannot rank a fleet.</td><td>The company with the largest ratio is the most dangerous.</td></tr>
+        <tr><td>Accuracy of 89% on a deep tree</td><td>The tree fits this sample. A 3-level prune that falls to about 58% is the interpretable version.</td><td>The system is safe, or the 17-level tree found the real causes.</td></tr>
+        <tr><td>A non-significant logistic model</td><td>Area, time, and vehicle count do not clearly separate long brick events at this cutoff.</td><td>Those factors do not matter in the world. The cutoff itself may be the problem.</td></tr>
+        <tr><td>A stakeholder word such as “possible”</td><td>People map the same word onto very different probabilities.</td><td>You have a likelihood. Ask for a rate per mile or per trip.</td></tr>
+        <tr><td>A famous, vivid incident</td><td>Perceived risk and measured risk diverge. Shark attacks feel more likely than falling airplane parts; parts kill about 30 times more people in the US.</td><td>The viral case is the rate.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Where the system sits before you score a cell</h2>
+    <p>The bounding chart has two axes: deterministic to non-deterministic, and low to high safety criticality. Deterministic high-criticality systems (aircraft, fixed vehicle path plans) can be tested against a spec. Non-deterministic high-criticality systems cannot. That corner holds computer vision in surgery and in vehicles, and LLM chatbots in 911 centers. Medical-record summaries, probabilistic planners, and predictive maintenance sit in the middle band. Shopping recommendations, vacuum routes, and game vision are low criticality: a wrong answer is a product failure, not the same hazard analysis.</p>
+    <p>Certification gets harder as you move right and up, because you cannot list the outputs. N-gram counts already explode (hundreds of types at 2-grams, hundreds of thousands at 5-grams). A decoder that samples the next token from the last tokens is not a lookup table. “We tested the average case” is a weak safety argument in that corner.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="head">Controllability can outrank accuracy</div>
+        <div class="body"><p>ISO 26262 HARA, mandatory for cars, scores severity, exposure, and controllability. C1 is easily controllable, C2 normally controllable, C3 difficult, C4 uncontrollable. A human who cannot take over turns a moderate malfunction into a high risk even when the model’s accuracy looks fine. Uncertainty about the model is an argument about C3 and C4, not only about the error rate.</p></div>
+      </div>
+      <div class="card">
+        <div class="head">Failure is not the same as degradation</div>
+        <div class="body"><p>FMEA rows assume a function is lost: the pump fails to operate, the local effect in that flight phase is none, severity is IV. A vision system that labels a bus as a train has not “failed off.” It has degraded. Write the mode (wrong class), the mechanism (data, features, or a missing check), and the effect (a bad driving or dispatch decision). The Snohomish point on the slide: the useful next step is that FMEA, not only a story about the crash.</p></div>
+      </div>
+    </div>
+
+    <p class="small">Fault trees start from the bad state and work down. AND means every cause is required. OR means any one is enough. Probabilistic risk assessment then puts numbers on those causes. The numbers help when the data exist. They mislead when the system is new, because a prior dressed as a probability looks like evidence.</p>
+    <p class="small">Fundamental-problem slide: model “facts” are cited from the open web, with Reddit, Wikipedia, and YouTube at the top of one citation study, and a resume can smuggle an instruction the screen ignores. Provenance of the training distribution is part of the risk of trusting an output.</p>
+  </section>
+
+  <!-- ================= PUDO ================= -->
+  <section class="tab stack" id="tab-pudo">
+    <h2>PUDO exercise</h2>
+    <p>Pickup and drop-off complaints for self-driving cars. The data source on the slide is California PUC quarterly reports. Eight quarters, Q3 2024 through Q2 2026. Use complaints per trip or per mile, not the complaint count.</p>
+
+    <details open>
+      <summary>Step 1. Hazards</summary>
+      <div><p>Stay concrete. A bad curb stop can block a bike lane, a travel lane, or a crosswalk. A passenger can step out into moving traffic. An immobilized vehicle can block an emergency response. A rider can be stranded. Each of those is its own hazard. “PUDO is in the news” is the motivation, not the hazard.</p></div>
+    </details>
+    <details open>
+      <summary>Step 2. Consequences</summary>
+      <div><p>Most of these are minor to significant: delay, a near-miss, a blocked curb. A person struck while the vehicle is stopped in the wrong place, or an ambulance that cannot pass, is major or severe. Say that the score is a judgment. The COVID chart on the definition slide is the reminder that the same hazard does not have one consequence for every person exposed.</p></div>
+    </details>
+    <details open>
+      <summary>Step 3. Likelihood, rising or falling</summary>
+      <div class="stack">
+        <p>Split the eight quarters into Y1 (Q3 2024–Q2 2025) and Y2 (Q3 2025–Q2 2026). Compute complaints divided by trips, and keep miles in the sentence if you have them. A rising count with a rising fleet can be a falling rate. State the direction of the rate, then pick the matrix row from that rate, not from how often the story appears.</p>
+        <p>The homework chart of complaints per trip starts near 4.5, drops to about 1.5 by the third point, and then sits between about 1.5 and 1.9. The one-sample t-test against a mean of 1.9 is t(3) = 3.1, p = 0.054. The slide calls this a non-significant large difference. With df = 3 you have four points of information. You cannot claim the last point is a new regime. You also cannot claim the early drop “proved” a permanent fix. The last point lives in the same band as the previous few.</p>
+        <div class="chart" id="c-pudo"></div>
+        <p class="small">Y axis: complaints per trip. X axis: reporting period. Values are approximate, redrawn from the shape described on the homework chart (about 4.5, down to about 1.5, then flat between 1.5 and 1.9). Not exact data.</p>
+      </div>
+    </details>
+
+    <h3>Which test, and why</h3>
+    <p>Plot first. The shape of the data decides the test. If the histogram looks like a bell, the tests that compare averages (t-tests) work. If it is lopsided with a long tail, a few extreme values drag the average around, so use a test that ranks the values instead.</p>
+    <div class="grid2">
+      <div class="stack">
+        <p class="semibold">Bell-shaped: use a t-test</p>
+        <div class="chart" id="c-bell"></div>
+        <p class="small">X axis: trips per day (thousands). Y axis: number of days. Illustrative. Mean and median sit together in the middle.</p>
+      </div>
+      <div class="stack">
+        <p class="semibold">Skewed: use a rank test</p>
+        <div class="chart" id="c-skew"></div>
+        <p class="small">X axis: brick duration (minutes). Y axis: number of events. Illustrative, shaped like the FOIA histogram. The long tail pulls the mean well above the typical event.</p>
+      </div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>Bell-shaped numbers</th><th>Skewed, separate groups</th><th>Skewed, same things measured again</th></tr></thead>
+      <tbody>
+        <tr><td>Two groups</td><td>Two-sample t-test</td><td>Mann-Whitney</td><td>Wilcoxon signed-rank</td></tr>
+        <tr><td>Three or more groups</td><td>(ANOVA, not on the slide)</td><td>Kruskal-Wallis</td><td>Friedman</td></tr>
+        <tr><td>One group vs. a fixed number</td><td>One-sample t-test</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <div class="grid2" id="tests"></div>
+    <p>If the parametric and Mann-Whitney answers disagree, trust the test that matches the histogram. Then ask an LLM the same question and treat a confident disagreement as a reason to recheck the exposure and the distribution. The model is not a second sample.</p>
+
+    <h3>Frequentist and Bayesian, as interpretations</h3>
+    <div class="grid2">
+      <div class="stack">
+        <p class="semibold">Frequentist</p>
+        <p>The true complaint rate is a fixed number. A confidence interval and a p-value say how compatible the data are with a claim such as “Y1 and Y2 have the same rate.” The p-value is how surprising the result is if that claim is true. It is not the probability that the claim is true, and it is not the size of the harm.</p>
+        <p>Type I error (α) is rejecting a true “no difference” claim: a false alarm. Type II (β) is missing a real difference. Power is 1 − β. A non-significant result on four points is often a power problem, not a finding of safety.</p>
+      </div>
+      <div class="stack">
+        <p class="semibold">Bayesian</p>
+        <p>The rate is a distribution you update. The disease slide is the calculation to be able to redo. Prior P(disease) = 0.001. Test is positive. True positive rate 0.99. False positive rate 0.05.</p>
+        <p>Numerator: 0.99 × 0.001 = 0.00099. Denominator: 0.00099 + 0.05 × 0.999 = 0.05094. Posterior ≈ 0.019. People guess “about 99%” because they ignore the base rate. P(disease | positive) is not P(positive | disease).</p>
+        <div class="chart" id="c-bayes"></div>
+        <p class="small">Everyone who tests positive, out of 100,000 people screened (derived from the slide’s rates). Only 99 of the 5,094 positives are sick, about 2%.</p>
+        <p>Drawback, especially for a new AI system: the prior is a judgment, and with little data the prior is the answer. A precise posterior can hide that. More data helps both approaches. No track record helps neither.</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="title">Distributions mini-exercise</div>
+      <p>Make three histograms: complaints, trips, and complaints per trip. Symmetric and bell-shaped supports a t-test. A spike at zero or a long right tail does not. Counts of uncommon events often look Poisson. A ratio of two noisy counts is often skewed even when you hoped dividing would calm it down. Name the shape, then pick the test. Do not name a distribution from the variable’s reputation.</p>
+    </div>
+
+    <h3>Perceived likelihood is not a row on the matrix</h3>
+    <p>On the subjective-probability chart, “possible” stretches from near 0 to near 1. “Almost certain” clusters high and still has spread. Words from a stakeholder are not likelihoods. The intuition checks make the same point with base rates: lung cancer deaths are about 140,000 a year in the US and vehicle deaths about 32,000; lightning kills more Americans in a typical year than tornadoes. A vivid AV video will be scored “almost certain” unless you bring a denominator.</p>
+    <div class="chart" id="c-deaths"></div>
+    <p class="small">X axis: approximate US deaths per year. Source: intuition-check slide.</p>
+  </section>
+
+  <!-- ================= BRICKING ================= -->
+  <section class="tab stack" id="tab-bricking">
+    <h2>AV bricking exercise</h2>
+    <p>An immobilized automated vehicle. Data are a San Francisco FOIA log, February–October 2025. The questions in red on the slide are the exam questions: how long events last, whether duration is getting better or worse, whether some areas or times are worse, and where the public risks sit on the matrix.</p>
+
+    <details open>
+      <summary>Read the histograms before any model</summary>
+      <div>
+        <p>Duration is right-skewed. Almost all of the mass is in the first bin, with a thin tail that still reaches out toward 600–700. The typical event is the short one. The mean is pulled by the tail, so report a median, and treat the tail as its own hazard: a vehicle that sits for a very long time. The later logistic cutoffs are 20 minutes and 40 minutes. Changing that cutoff changes the label, which changes the model.</p>
+        <p>Time of day is a fraction of the day, and 0.55 is noon. The histogram rises through the afternoon and peaks before evening. That is a count of events, not a rate per mile driven at that hour.</p>
+        <p>Area codes on the slide: 1 Downtown / Tenderloin / Civic Center, 2 Financial District / Embarcadero, 3 Chinatown / North Beach / Nob Hill, 4 SoMa / Mission Bay, 5 Mission, 6 Castro / Noe / Bernal, 7 Hayes Valley / Haight, 8 Richmond / Presidio, 9 Sunset, 10 Bayview / Hunters Point / Excelsior. Piers 35 and 38 were folded into Embarcadero. Code 4 is the tallest bar. Without miles or trips in that neighborhood, a tall bar can mean the fleet spends more time there.</p>
+      </div>
+    </details>
+    <details open>
+      <summary>A hazard taxonomy, then one cell each</summary>
+      <div><p>Build the list from the log and the rest of the FOIA material, not from a generic AV list. Separate at least: blocked traffic, blocked emergency access, conflict with people walking or cycling around the dead vehicle, a stranded passenger, and a second vehicle hitting the stopped one. Delay is often likely and minor. A secondary crash is less likely and much more severe. They do not share a cell. Say whether duration is improving only after you look across months and account for how many vehicles were operating. One histogram cannot answer “better or worse.”</p></div>
+    </details>
+
+    <h3>Which model matches which question</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Question</th><th>Model on the slide</th><th>Assumption you must check</th></tr></thead>
+      <tbody>
+        <tr><td>What predicts a continuous duration?</td><td>Multiple regression</td><td>More than one continuous predictor, and the variables are roughly normal. The duration histogram violates that. Transform it or do not trust the coefficients.</td></tr>
+        <tr><td>Is this event a long brick, yes or no?</td><td>Logistic regression</td><td>You need a 0/1 label. A 20-minute rule and a 40-minute rule are stakeholder choices. Some tools accept continuous features; time and area still need a principled category.</td></tr>
+        <tr><td>Are there natural groups in duration or time?</td><td>Clustering</td><td>Unsupervised. Explained variance says how cleanly the groups separate. It does not say the cutoff is a safe operating limit.</td></tr>
+        <tr><td>Which factors split long vs short, in order?</td><td>Decision tree</td><td>Binary outcome. Ordinal, continuous, and nominal inputs can mix. A deep tree will memorize a small FOIA file.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>How to read the logistic printout</h3>
+    <p>The 20-minute model has chi-square about 2.93 on 3 degrees of freedom, p about 0.40. The 40-minute model is about 3.21, p about 0.36. Neither model beats a null model of “no relationship.” Area and time coefficients are small and nowhere near significant. The multi-vehicle coefficient is the largest in both fits. At 40 minutes its p-value is about 0.09 and its odds ratio is a bit above 2, but the interval still includes 1. An interval that includes 1 means the data still allow “no increase.”</p>
+    <div class="chart" id="c-logit"></div>
+    <p class="small">Y axis: p-value. Every bar is above the 0.05 line, so nothing clears significance. Source: logistic regression printouts on the bricking slides.</p>
+    <p>Clustering explained variance is about 94% for one cut and 75% for another. Use that to talk about separation of durations. Do not use it to declare a neighborhood unsafe. If stakeholders pick 20 minutes because that is when an intersection becomes intolerable, say that the safety threshold and the statistical cluster are different decisions.</p>
+
+    <h3>How to read the decision tree</h3>
+    <p>The in-class tree for a 20-minute target splits first on number of vehicles. A later Claude fit ranked time at about 48%, area at about 41%, and vehicles at about 10%, on a 12-level tree with about 84% accuracy. Another full tree on the slide goes to 17 levels and about 89% accuracy, with 62 leaves. Pruned to depth 3 it has 6 leaves and about 58% accuracy. The drop is the finding. The deep tree fit this file. The small tree is what you could explain, and it is only modestly better than a coin flip. “Vehicles should matter” was a hypothesis. In these fits it matters less than time and place.</p>
+    <div class="grid2">
+      <div class="stack">
+        <p class="semibold">Accuracy by tree depth</p>
+        <div class="chart" id="c-tree"></div>
+        <p class="small">Y axis: accuracy (%). Deeper trees score higher on this file because they memorize it. The depth-12 tree is a separate fit.</p>
+      </div>
+      <div class="stack">
+        <p class="semibold">Feature importance, depth-12 fit</p>
+        <div class="chart" id="c-importance"></div>
+        <p class="small">X axis: share of the tree’s splitting importance (%). Source: Claude-built tree on the bricking slide.</p>
+      </div>
+    </div>
+    <div class="callout warning">
+      <div class="title">An LLM-built tree is part of the risk</div>
+      <p>The slide says not to use Copilot for the tree. The picture is an unreadable bush. A model that emits a 17-level structure and an accuracy in the high 80s has not certified the vehicle. It has produced another output you would need to audit. Prefer the pruned tree, and say what accuracy you gave up for that audit.</p>
+    </div>
+    <p>Bias in this specific task: a human chose the minute cutoff and the neighborhood bins. The FOIA set is one city and eight months, and only events someone logged. Piers were remapped. The duration distribution is skewed, so a mean or a deep tree will chase outliers. Mitigation is the same list as the data-bias slide: provenance, balance, what was dropped or imputed, and a written record of the cutoff. Good cleaning is one of the stronger risk controls in the course, because it stops a model from laundering a logging artifact into a safety claim.</p>
+  </section>
+
+  <!-- ================= BIAS ================= -->
+  <section class="tab stack" id="tab-bias">
+    <h2>Reading bias, missingness, and a confusion matrix</h2>
+    <p>Three biases overlap. Human bias is a person’s choice (labels, cutoffs, which error they care about). Systemic bias is institutional or historical, already in the file before you model it. Statistical bias is the gap between a true parameter and the one you estimated: train and test histograms that do not match, a variance you shrank by imputing the mean, a coefficient you cannot interpret because two features move together.</p>
+
+    <h3>Invalid moves in the modeling workflow</h3>
+    <p>The workflow slide marks these as invalid, against a list of subjective choices that are allowed if you document them. On an exam, naming the invalid move is the risk interpretation.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Invalid choice</th><th>Why it distorts the risk</th></tr></thead>
+      <tbody>
+        <tr class="danger"><td>Leaving bad entries (negative ages, duplicate rows)</td><td>The fit describes the logging error.</td></tr>
+        <tr class="danger"><td>Imputing, encoding, or oversampling before the train/test split</td><td>Information from the test rows leaks into training. Accuracy is no longer an honest check.</td></tr>
+        <tr class="warning"><td>Mean imputation when missingness is not completely random</td><td>You pull the distribution toward a value the missing rows may not have.</td></tr>
+        <tr class="warning"><td>Keeping a feature that is not a legitimate predictor</td><td>A proxy (a demographic stand-in, a post-outcome field) invents a cause.</td></tr>
+        <tr class="danger"><td>Scoring the model on the training rows</td><td>You measure memorization. The deep bricking tree is the picture of this.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Missing-data exercise</h3>
+    <p>Target on the slide: fatalities or serious injuries. Predictors are the other columns. Histogram every column before you repair anything, and mark outliers. Then, for the MAR and MCAR files, do both treatments: fill with the mean or median, and drop incomplete rows. Histogram again. The treatment that moves the shape is the more biased one, even if its accuracy looks better.</p>
+    <div class="chart" id="c-impute"></div>
+    <p class="small">X axis: travel speed (mph). Y axis: number of crash records. Illustrative. Mean fill stacks every blank into one bar, which squeezes the spread and hides the fast crashes that may be the ones missing.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Pattern</th><th>Meaning</th><th>What goes wrong if you ignore it</th></tr></thead>
+      <tbody>
+        <tr><td>MCAR</td><td>Missingness is unrelated to the data.</td><td>Complete-case analysis mostly costs you sample size and power.</td></tr>
+        <tr><td>MAR</td><td>Missingness depends on columns you can see.</td><td>Dropping rows drops a predictable slice of the population. Mean fill still flattens variance.</td></tr>
+        <tr><td>MNAR</td><td>Missingness depends on the missing value itself. Severe crashes not written down.</td><td>Both deletion and mean fill invent a safer dataset than the road. No standard fill fixes this. Say so.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Build a logistic regression on each repaired file and compare accuracy and F1, not accuracy alone. There is no universally correct fill. There is a large penalty for the worse one. Feature deletion is called out on the slide as its own treatment: dropping a column because it is messy can drop the hazard you were asked to study. Last-observation-carried-forward is a time-series convenience and still biases non-MCAR data. Model-based and multiple imputation can represent uncertainty better and still fail under MNAR, and they cost more computation.</p>
+
+    <h3>Feature exercise</h3>
+    <p>Question first: which factors contribute most to fatalities and severe injuries on rural roads. Start from first principles (speed, light, road type, restraint, impairment) and a simple filter, and stop at about ten features. The heuristic is at least 10 observations per feature, and 30 is better. A kitchen-sink model on a small crash file will look accurate and will not answer “what contributes most.”</p>
+    <p>Multicollinearity is the hard constraint. Two features that rise together make the coefficients swap credit, so you cannot rank causes. The numerical cutoff for “too correlated” is a judgment. Missingness still matters here: a feature that is missing exactly when the crash is severe is not a candidate for a clean coefficient. If performance is poor, go back to the histogram, the fill, and the feature list before you reach for a more complex model. Document every drop.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Selector</th><th>Examples</th><th>Tradeoff</th></tr></thead>
+      <tbody>
+        <tr><td>Wrapper</td><td>SFS, RFE</td><td>Often predicts well. Unstable, and expensive.</td></tr>
+        <tr><td>Filter</td><td>SelectKBest, MRMR</td><td>Stable and cheap. Can miss a combination that only works together.</td></tr>
+        <tr><td>Embedded</td><td>L1 penalty</td><td>The model itself shrinks features. Not available for every algorithm.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Accuracy is the wrong headline when harm is rare</h3>
+    <p>For a fatal or serious injury, a false negative is the model saying “not severe” when it was. A false positive is a false alarm. Precision is the share of alarms that were real: TP / (TP + FP). Recall is the share of real events you caught: TP / (TP + FN). Accuracy counts true negatives in the numerator, so a model that never predicts a fatality can score very high on a rare event.</p>
+    <div class="chart" id="c-metrics"></div>
+    <p class="small">Y axis: score (%). Illustrative: 1,000 crashes, 20 fatal. Model B has 15 true positives, 5 misses, and 60 false alarms. Model A wins on accuracy and misses every fatality.</p>
+    <p>F1 = 2 × precision × recall / (precision + recall). Use it when you need one number that notices both missed harms and false alarms. On this course’s safety questions, lead with recall and then F1. Quote accuracy only to show how it can flatter a model that misses the hazard. The class feature exercise asks you to post accuracy, precision, recall, and F1 for the ten-feature model. Bring all four, and say which error is the dangerous one.</p>
+
+    <hr />
+
+    <h3>What you write down so someone else can judge the risk</h3>
+    <div class="grid2">
+      <div class="stack">
+        <p class="semibold">Model card</p>
+        <p>Six sections: model details, architecture, training data and methodology, performance metrics, biases and limitations, ethical considerations. It reports how the model behaves across groups and where it is meant to be used. The slide asks whether this is standard practice. It is a disclosure, not a certificate that the output is safe.</p>
+      </div>
+      <div class="stack">
+        <p class="semibold">System card and checklists</p>
+        <p>A system card adds harm-category scores and benchmark tables. A high score on a knowledge benchmark does not move a 911 chatbot out of the high-criticality, non-deterministic corner. The bias checklist separates historical bias in the labels, population mismatch between training and use, temporal drift, and the fallacy of collapsing different time periods into one row.</p>
+      </div>
+    </div>
+
+    <div class="callout neutral">
+      <div class="title">Tabular checklist, in the order you would actually work</div>
+      <p>State the research question. Read where the data came from, including the column legend. Histogram and mark outliers. Decide the missing values with the histogram as the screen, because you will not be told MCAR versus MNAR in the field. Select features, check multicollinearity, and accept that you may loop. If the model is weak, undo an earlier choice before adding complexity. Write the decisions down.</p>
+    </div>
+
+    <h3>Practice prompts</h3>
+    <p>Close the notes and answer in five sentences: hazard, consequence, likelihood with its denominator, matrix cell, and the claim you refuse to make.</p>
+    <ol class="prompts">
+      <li>The complaints-per-trip series falls from about 4.5 to about 1.5 and then stays flat. The test of the last point is p = 0.054. Is PUDO risk falling, and where do you put a blocked-lane hazard?</li>
+      <li>One company has 53 crashes and another has 1. The second has the worse odds ratio and an interval hundreds of points wide. Which comparison is the risk comparison?</li>
+      <li>A 40-minute bricking model is non-significant, and the multi-vehicle interval includes 1. A cluster cut explains 94% of duration variance. What can you tell the city?</li>
+      <li>Fatalities are rare. Model A has higher accuracy. Model B has higher recall and a lower F1 gap between precision and recall. Which one did you fail if a severe crash was labeled safe?</li>
+      <li>Severe-crash rows are blank more often than minor-crash rows. You fill the blanks with the column mean and accuracy rises. What pattern of missingness is that, and why is the new accuracy a worse safety argument?</li>
+    </ol>
+    <p class="small">Source: AIDDR intro / risk lectures and Tabular Data I–II PDFs. PowerPoint copies were not used.</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const fmt = (v, suffix = "") => (Math.abs(v) >= 1000 ? Math.round(v).toLocaleString() : String(+v.toFixed(2))) + suffix;
+
+  function niceMax(max) {
+    if (max <= 0) return 1;
+    const p = Math.pow(10, Math.floor(Math.log10(max)));
+    const m = max / p;
+    const n = m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10;
+    return n * p;
+  }
+  function wrap(label, max = 14) {
+    const words = label.split(" ");
+    const lines = [""];
+    words.forEach((w) => {
+      const cur = lines[lines.length - 1];
+      if (cur && (cur + " " + w).length > max) lines.push(w);
+      else lines[lines.length - 1] = cur ? cur + " " + w : w;
+    });
+    return lines;
+  }
+  function legend(series) {
+    if (series.length < 2) return "";
+    return '<div class="legend">' + series.map((s) => `<span style="--c:${s.color}">${esc(s.name)}</span>`).join("") + "</div>";
+  }
+  const toneColor = (t) => css("--" + (t || "accent"));
+
+  function barChart(id, opts) {
+    const el = document.getElementById(id);
+    const series = opts.series.map((s) => ({ ...s, color: toneColor(s.tone) }));
+    const cats = opts.categories;
+    const suffix = opts.suffix || "";
+    const all = series.flatMap((s) => s.data).concat(opts.ref ? [opts.ref.value] : []);
+    const max = opts.yMax || niceMax(Math.max(...all));
+    const showValues = opts.showValues !== undefined ? opts.showValues : series.length === 1;
+    const text2 = css("--text-2"), text3 = css("--text-3"), stroke = css("--stroke");
+    let svg = "";
+
+    if (opts.horizontal) {
+      const W = opts.width || 600, L = 150, R = 60, rowH = 34, T = 6;
+      const H = T + cats.length * rowH + 22;
+      const pw = W - L - R;
+      const x = (v) => L + (v / max) * pw;
+      for (let i = 0; i <= 4; i++) {
+        const v = (max / 4) * i;
+        svg += `<line x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${T + cats.length * rowH}" stroke="${stroke}"/>`;
+        svg += `<text x="${x(v)}" y="${H - 4}" font-size="11" text-anchor="middle" fill="${text3}">${fmt(v, suffix)}</text>`;
+      }
+      cats.forEach((c, i) => {
+        const cy = T + i * rowH + rowH / 2;
+        svg += `<text x="${L - 10}" y="${cy + 4}" font-size="12" text-anchor="end" fill="${text2}">${esc(c)}</text>`;
+        series.forEach((s, j) => {
+          const bh = (rowH - 10) / series.length;
+          const y = T + i * rowH + 5 + j * bh;
+          const v = s.data[i];
+          svg += `<rect x="${L}" y="${y}" width="${Math.max(0, x(v) - L)}" height="${bh - 2}" rx="3" fill="${s.color}"><title>${esc(s.name)}: ${fmt(v, suffix)}</title></rect>`;
+          if (showValues) svg += `<text x="${x(v) + 6}" y="${y + bh / 2 + 3}" font-size="11" fill="${text2}">${fmt(v, suffix)}</text>`;
+        });
+      });
+      el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${svg}</svg>` + legend(series);
+      return;
+    }
+
+    const W = opts.width || 600, L = 48, R = 12, T = 14;
+    const H = opts.height || 220;
+    const B = 40;
+    const ph = H - T - B, pw = W - L - R;
+    const y = (v) => T + ph - (v / max) * ph;
+    for (let i = 0; i <= 4; i++) {
+      const v = (max / 4) * i;
+      svg += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${stroke}"/>`;
+      svg += `<text x="${L - 6}" y="${y(v) + 4}" font-size="11" text-anchor="end" fill="${text3}">${fmt(v, suffix)}</text>`;
+    }
+    const slot = pw / cats.length;
+    const groupW = slot * 0.7;
+    const bw = groupW / series.length;
+    cats.forEach((c, i) => {
+      const gx = L + i * slot + (slot - groupW) / 2;
+      series.forEach((s, j) => {
+        const v = s.data[i];
+        const bx = gx + j * bw;
+        svg += `<rect x="${bx + 1}" y="${y(v)}" width="${bw - 2}" height="${Math.max(0, T + ph - y(v))}" rx="3" fill="${s.color}"><title>${esc(s.name)}: ${fmt(v, suffix)}</title></rect>`;
+        if (showValues) svg += `<text x="${bx + bw / 2}" y="${y(v) - 4}" font-size="11" text-anchor="middle" fill="${text2}">${fmt(v, suffix)}</text>`;
+      });
+      wrap(c).forEach((line, k) => {
+        svg += `<text x="${L + i * slot + slot / 2}" y="${T + ph + 16 + k * 13}" font-size="11" text-anchor="middle" fill="${text2}">${esc(line)}</text>`;
+      });
+    });
+    if (opts.ref) svg += refLine(opts.ref, y(opts.ref.value), L, W - R);
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${svg}</svg>` + legend(series);
+  }
+
+  function refLine(ref, yy, x1, x2) {
+    const c = toneColor(ref.tone || "text-3");
+    return `<line x1="${x1}" x2="${x2}" y1="${yy}" y2="${yy}" stroke="${c}" stroke-dasharray="5 4" stroke-width="1.5"/>` +
+      `<text x="${x2}" y="${yy - 5}" font-size="11" text-anchor="end" fill="${c}">${esc(ref.label)}</text>`;
+  }
+
+  function lineChart(id, opts) {
+    const el = document.getElementById(id);
+    const s = { ...opts.series[0], color: toneColor(opts.series[0].tone) };
+    const cats = opts.categories;
+    const W = 600, L = 40, R = 12, T = 14, B = 26, H = opts.height || 220;
+    const ph = H - T - B, pw = W - L - R;
+    const max = niceMax(Math.max(...s.data, opts.ref ? opts.ref.value : 0));
+    const y = (v) => T + ph - (v / max) * ph;
+    const x = (i) => L + (i + 0.5) * (pw / cats.length);
+    const text2 = css("--text-2"), text3 = css("--text-3"), stroke = css("--stroke");
+    let svg = "";
+    for (let i = 0; i <= 4; i++) {
+      const v = (max / 4) * i;
+      svg += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${stroke}"/>`;
+      svg += `<text x="${L - 6}" y="${y(v) + 4}" font-size="11" text-anchor="end" fill="${text3}">${fmt(v)}</text>`;
+    }
+    cats.forEach((c, i) => {
+      svg += `<text x="${x(i)}" y="${H - 6}" font-size="11" text-anchor="middle" fill="${text2}">${esc(c)}</text>`;
+    });
+    if (opts.ref) svg += refLine(opts.ref, y(opts.ref.value), L, W - R);
+    svg += `<polyline fill="none" stroke="${s.color}" stroke-width="2.5" points="${s.data.map((v, i) => x(i) + "," + y(v)).join(" ")}"/>`;
+    s.data.forEach((v, i) => {
+      svg += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${s.color}"><title>${esc(cats[i])}: ${fmt(v)}</title></circle>`;
+    });
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${svg}</svg>`;
+  }
+
+  function donut(id, data) {
+    const el = document.getElementById(id);
+    const total = data.reduce((a, d) => a + d.value, 0);
+    const r = 70, w = 26, cx = 80, cy = 80;
+    let a0 = -Math.PI / 2, svg = "";
+    data.forEach((d) => {
+      const frac = d.value / total;
+      const a1 = a0 + frac * Math.PI * 2;
+      const large = frac > 0.5 ? 1 : 0;
+      const p = (a, rr) => [cx + rr * Math.cos(a), cy + rr * Math.sin(a)];
+      const [x0, y0] = p(a0, r), [x1, y1] = p(a1, r), [x2, y2] = p(a1, r - w), [x3, y3] = p(a0, r - w);
+      svg += `<path d="M${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${r - w},${r - w} 0 ${large} 0 ${x3},${y3} Z" fill="${toneColor(d.tone)}"><title>${esc(d.label)}: ${d.value.toLocaleString()}</title></path>`;
+      a0 = a1;
+    });
+    svg += `<text x="${cx}" y="${cy + 5}" font-size="15" font-weight="600" text-anchor="middle" fill="${css("--text")}">${total.toLocaleString()}</text>`;
+    const leg = data.map((d) => `<span style="--c:${toneColor(d.tone)}">${esc(d.label)}: ${d.value.toLocaleString()} (${((d.value / total) * 100).toFixed(1)}%)</span>`).join("");
+    el.innerHTML = `<div class="donut-row"><svg viewBox="0 0 160 160" style="width:160px">${svg}</svg><div class="legend" style="flex-direction:column;gap:6px">${leg}</div></div>`;
+  }
+
+  function oddsChart(id) {
+    const rows = [
+      { name: "Waymo", point: 4, low: 3, high: 5, note: "~5.5M miles" },
+      { name: "Cruise", point: 8, low: 5, high: 11, note: "~1.5M miles" },
+      { name: "NVIDIA", point: 59, low: 8, high: 421, note: "1 crash, 7,169 mi" },
+    ];
+    const W = 640, L = 80, R = 190, rowH = 34, T = 10;
+    const pw = W - L - R, H = T + rows.length * rowH + 34;
+    const x = (v) => L + (Math.log10(v) / 3) * pw;
+    const text = css("--text"), text2 = css("--text-2"), text3 = css("--text-3"), stroke = css("--stroke"), acc = css("--accent");
+    let svg = "";
+    [1, 10, 100, 1000].forEach((t) => {
+      svg += `<line x1="${x(t)}" x2="${x(t)}" y1="${T}" y2="${T + rows.length * rowH}" stroke="${stroke}"/>`;
+      svg += `<text x="${x(t)}" y="${T + rows.length * rowH + 14}" font-size="11" text-anchor="middle" fill="${text3}">${t}</text>`;
+    });
+    rows.forEach((d, i) => {
+      const cy = T + i * rowH + rowH / 2;
+      svg += `<text x="${L - 10}" y="${cy + 4}" font-size="12" text-anchor="end" fill="${text2}">${d.name}</text>`;
+      svg += `<line x1="${x(d.low)}" x2="${x(d.high)}" y1="${cy}" y2="${cy}" stroke="${acc}" stroke-width="3" stroke-linecap="round"/>`;
+      svg += `<circle cx="${x(d.point)}" cy="${cy}" r="5" fill="${text}"/>`;
+      svg += `<text x="${W - R + 10}" y="${cy + 4}" font-size="11" fill="${text3}">${d.point} (${d.low}–${d.high}) · ${d.note}</text>`;
+    });
+    svg += `<text x="${L + pw / 2}" y="${H - 2}" font-size="11" text-anchor="middle" fill="${text3}">Odds ratio (log scale)</text>`;
+    document.getElementById(id).innerHTML = `<svg viewBox="0 0 ${W} ${H}">${svg}</svg>`;
+  }
+
+  function heatmap(id) {
+    const impacts = ["Insignificant 1", "Minor 2", "Significant 3", "Major 4", "Severe 5"];
+    const rows = [
+      ["5 Almost certain", [["Medium", 5], ["High", 10], ["Very high", 15], ["Extreme", 20], ["Extreme", 25]]],
+      ["4 Likely", [["Medium", 4], ["Medium", 8], ["High", 12], ["Very high", 16], ["Extreme", 20]]],
+      ["3 Moderate", [["Low", 3], ["Medium", 6], ["Medium", 9], ["High", 12], ["Very high", 15]]],
+      ["2 Unlikely", [["Very low", 2], ["Low", 4], ["Medium", 6], ["Medium", 8], ["High", 10]]],
+      ["1 Rare", [["Very low", 1], ["Very low", 2], ["Low", 3], ["Medium", 4], ["Medium", 5]]],
+    ];
+    const heat = css("--heat");
+    let html = `<div class="lab" style="color:var(--text-3)">Probability ↓ / Impact →</div>`;
+    html += impacts.map((i) => `<div style="color:var(--text-2)">${i}</div>`).join("");
+    rows.forEach(([label, cells]) => {
+      html += `<div class="lab">${label}</div>`;
+      cells.forEach(([word, score]) => {
+        html += `<div class="cell" style="background:rgba(${heat},${(0.06 + 0.7 * score / 25).toFixed(2)})"><b>${score}</b><span>${word}</span></div>`;
+      });
+    });
+    document.getElementById(id).innerHTML = html;
+  }
+
+  const TESTS = [
+    { name: "Two-sample t-test", tag: "2 groups · bell-shaped", body: [
+      "A two-sample t-test asks: are the averages of two separate groups really different, or is the gap just chance?",
+      "For example, you could compare the average crash severity in 2022 against 2023. If the p-value is small (usually under 0.05), the difference is probably real. If it’s large, the gap could easily be random noise.",
+      "It works best when the data is a number (like speed or cost) and is roughly bell-shaped. For yes/no outcomes like fatal vs. not fatal, a different test is used." ] },
+    { name: "One-sample t-test", tag: "1 group vs. a number", body: [
+      "A one-sample t-test asks: is the average of one group really different from a number you already have in mind?",
+      "For example, the homework checks recent complaints per trip against a stated mean of 1.9. It got p = 0.054, just above the 0.05 cutoff. So you can’t call it a real change, but with only four points you can’t call it “no change” either.",
+      "Use it when you have one set of numbers and one reference value, not two groups to compare." ] },
+    { name: "Mann-Whitney", tag: "2 groups · skewed", body: [
+      "A Mann-Whitney test asks the same question as the two-sample t-test (are two separate groups different?) but doesn’t need bell-shaped data. Instead of comparing averages, it lines up every value from smallest to largest and checks whether one group tends to sit higher.",
+      "For example, PUDO complaints in Y1 against Y2 when the histogram is lopsided with a long tail. This is the slide’s choice for the PUDO exercise.",
+      "Use it when the data is skewed, has big outliers, or the sample is small." ] },
+    { name: "Wilcoxon signed-rank", tag: "2 measurements · paired", body: [
+      "A Wilcoxon signed-rank test asks: did the same things change between two measurements?",
+      "For example, the same 20 intersections measured before and after a software update. Each intersection is compared with itself, so the before and after numbers come in pairs.",
+      "Use it only when the data comes in natural pairs. Y1 and Y2 quarters are different time periods, not pairs, so it doesn’t fit the PUDO exercise." ] },
+    { name: "Kruskal-Wallis", tag: "3+ groups · skewed", body: [
+      "A Kruskal-Wallis test asks: among three or more separate groups, does at least one tend to be higher than the others?",
+      "For example, brick durations across the ten San Francisco area codes. A small p-value says some area is different. It does not tell you which one.",
+      "Use it for skewed data and three or more groups that don’t overlap." ] },
+    { name: "Friedman", tag: "3+ measurements · paired", body: [
+      "A Friedman test asks: when the same things are measured three or more times, did anything change?",
+      "For example, the same set of vehicles measured in three different months.",
+      "It is the three-or-more version of Wilcoxon signed-rank. Use it for skewed data where every unit shows up in every group." ] },
+  ];
+  document.getElementById("tests").innerHTML = TESTS.map((t) =>
+    `<div class="card"><div class="head">${t.name}<span class="tag">${t.tag}</span></div><div class="body">${t.body.map((p) => `<p>${esc(p)}</p>`).join("")}</div></div>`
+  ).join("");
+
+  function renderCharts() {
+    barChart("c-raw", { categories: ["Waymo", "Cruise", "NVIDIA"], series: [{ name: "Crashes", data: [53, 27, 1] }], height: 220, width: 400 });
+    barChart("c-rate", { categories: ["Waymo", "Cruise", "NVIDIA"], series: [{ name: "Crashes per million miles", data: [9.6, 18, 139.5] }], height: 220, width: 400 });
+    oddsChart("c-odds");
+    heatmap("heatmap");
+    lineChart("c-pudo", { categories: ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"], series: [{ name: "Complaints per trip", data: [4.5, 2.8, 1.5, 1.8, 1.6, 1.9, 1.7, 1.6] }], height: 210, ref: { value: 1.9, label: "Test mean 1.9", tone: "warning" } });
+    barChart("c-bell", { categories: ["40", "45", "50", "55", "60", "65", "70", "75", "80"], series: [{ name: "Days", data: [2, 6, 14, 22, 26, 22, 14, 6, 2], tone: "info" }], height: 220, width: 400, showValues: false });
+    barChart("c-skew", { categories: ["0–60", "60–120", "120–180", "180–240", "240–300", "300–400", "400–500", "500–700"], series: [{ name: "Events", data: [180, 24, 9, 5, 3, 2, 1, 2], tone: "warning" }], height: 220, width: 400, showValues: false });
+    donut("c-bayes", [
+      { label: "Sick and tested positive", value: 99, tone: "danger" },
+      { label: "Healthy but tested positive", value: 4995, tone: "neutral" },
+    ]);
+    barChart("c-deaths", { categories: ["Lung cancer deaths", "Vehicle deaths"], series: [{ name: "US deaths per year", data: [140000, 32000] }], horizontal: true });
+    barChart("c-logit", { categories: ["20-minute model", "40-minute model", "Multi-vehicle term (40 min)"], series: [{ name: "p-value", data: [0.4, 0.36, 0.09] }], height: 210, ref: { value: 0.05, label: "0.05 cutoff", tone: "danger" } });
+    barChart("c-tree", { categories: ["Depth 3 (pruned)", "Depth 12 (Claude)", "Depth 17 (full)"], series: [{ name: "Accuracy", data: [58, 84, 89] }], suffix: "%", yMax: 100, height: 240, width: 400, ref: { value: 50, label: "Coin flip" } });
+    barChart("c-importance", { categories: ["Time of day", "Area", "Number of vehicles"], series: [{ name: "Importance", data: [48, 41, 10] }], suffix: "%", horizontal: true, width: 400 });
+    barChart("c-impute", { categories: ["20s", "30s", "40s", "50s", "60s", "70s"], series: [
+      { name: "Observed rows only", data: [8, 15, 22, 18, 10, 5], tone: "info" },
+      { name: "After filling 30 blanks with the mean (~45)", data: [8, 15, 52, 18, 10, 5], tone: "warning" },
+    ], height: 230, showValues: false });
+    barChart("c-metrics", { categories: ["Accuracy", "Precision", "Recall", "F1"], series: [
+      { name: "Model A: always says “not fatal”", data: [98, 0, 0, 0], tone: "neutral" },
+      { name: "Model B: catches 15 of 20 fatal crashes", data: [93.5, 20, 75, 31.6], tone: "info" },
+    ], suffix: "%", yMax: 100, height: 240, showValues: true });
+  }
+  renderCharts();
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderCharts);
+
+  document.getElementById("pills").addEventListener("click", (e) => {
+    const btn = e.target.closest(".pill");
+    if (!btn) return;
+    document.querySelectorAll(".pill").forEach((p) => p.classList.toggle("active", p === btn));
+    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.id === "tab-" + btn.dataset.tab));
+  });
+})();
+</script>
+</body>
+</html>
